@@ -1,0 +1,760 @@
+<title>Explain Screen</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Explain Screen · the guide. The page borrows the tool's own marks: magenta rings and numbers are the tool,
+   ink circles are this guide pointing at it. */
+:root{
+  --paper:#f4f4f7; --surface:#ffffff; --surface-2:#ececf1; --ink:#17161d; --ink-2:#45434f; --muted:#6f6c7c; --line:#dfdde6;
+  --accent:#d6246e; --accent-ink:#a3134e; --accent-soft:#fbe6ef; --callout:#17161d; --callout-ink:#ffffff;
+  --ok:#16663f; --ok-bg:#e4f4ea; --ch:#a3134e; --ch-bg:#fbe6ef; --q:#4f4c5a; --q-bg:#ecebf0; --pr:#1c46b8; --pr-bg:#e5ecfc; --bad:#b42318; --bad-bg:#fcebe9; --ex:#6c6a76; --ex-bg:#efeff2;
+  --amb:#8a4b08; --amb-bg:#fdf1de;
+  --display:'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+  --body:'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono:'IBM Plex Mono', ui-monospace, Consolas, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --paper:#111015; --surface:#1a1920; --surface-2:#24232c; --ink:#efedf5; --ink-2:#c7c4d2; --muted:#9591a3; --line:#2f2d39;
+  --accent:#f0508f; --accent-ink:#ff8fb8; --accent-soft:#3b1628; --callout:#efedf5; --callout-ink:#17161d;
+  --ok:#7fd4a2; --ok-bg:#16301f; --ch:#ff8fb8; --ch-bg:#3b1628; --q:#c7c4d2; --q-bg:#2a2932; --pr:#9db8ff; --pr-bg:#1b2747; --bad:#ff9a8f; --bad-bg:#3a1714; --ex:#a9a6b5; --ex-bg:#26252d;
+  --amb:#f2b66a; --amb-bg:#35260f;
+  color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --paper:#111015; --surface:#1a1920; --surface-2:#24232c; --ink:#efedf5; --ink-2:#c7c4d2; --muted:#9591a3; --line:#2f2d39;
+  --accent:#f0508f; --accent-ink:#ff8fb8; --accent-soft:#3b1628; --callout:#efedf5; --callout-ink:#17161d;
+  --ok:#7fd4a2; --ok-bg:#16301f; --ch:#ff8fb8; --ch-bg:#3b1628; --q:#c7c4d2; --q-bg:#2a2932; --pr:#9db8ff; --pr-bg:#1b2747; --bad:#ff9a8f; --bad-bg:#3a1714; --ex:#a9a6b5; --ex-bg:#26252d;
+  --amb:#f2b66a; --amb-bg:#35260f;
+  color-scheme:dark; }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 var(--body);-webkit-font-smoothing:antialiased;padding-inline:20px}
+.wrap{max-width:1160px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:-.02em;text-wrap:balance;margin:0}
+h2{font-size:clamp(26px,3.4vw,36px);line-height:1.1}
+h3{font-size:19px;line-height:1.25;letter-spacing:-.01em}
+p{margin:0}
+a{color:var(--accent-ink)}
+code,kbd,.mono{font-family:var(--mono);font-size:.88em}
+kbd{display:inline-block;min-width:22px;padding:0 6px;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;background:var(--surface);color:var(--ink);text-align:center;line-height:1.5}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+section{padding-block:72px 8px}
+.eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;font:500 12.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.eyebrow::before{content:'';width:18px;height:18px;border:2px solid var(--accent);border-radius:5px}
+.lede{max-width:62ch;margin-top:14px;color:var(--ink-2);font-size:17px}
+.sub{max-width:64ch;margin-top:10px;color:var(--ink-2)}
+
+/* ── hero ── */
+.hero{padding-block:56px 0}
+.hero h1{font-size:clamp(44px,7.4vw,84px);line-height:.98;letter-spacing:-.035em}
+.hero h1 .ring{position:relative;display:inline-block;padding:0 .12em;margin:0 -.04em}
+.hero h1 .ring::after{content:'';position:absolute;inset:.06em -.02em -.02em;border:3px solid var(--accent);border-radius:.18em}
+.hero h1 .ring b{position:absolute;left:-12px;top:-8px;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font:700 14px/1 var(--body);letter-spacing:0;box-shadow:0 0 0 3px var(--paper);z-index:1}
+.hero .lede{font-size:clamp(17px,1.6vw,20px);max-width:58ch}
+.facts{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:22px;padding:0;list-style:none;color:var(--ink-2);font-size:15px}
+.facts li{display:flex;align-items:center;gap:8px}
+.facts li::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--accent)}
+
+/* ── the live demo ── */
+.stage{margin-top:36px}
+.drive{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:12px}
+.drive span{margin-right:4px;color:var(--muted);font-size:14px}
+.btn{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px;border:1px solid var(--line);border-radius:99px;background:var(--surface);color:var(--ink);font:500 14px/1 var(--body);cursor:pointer;text-decoration:none}
+.btn:hover{border-color:var(--accent);color:var(--accent-ink)}
+.btn.is-main{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.is-main:hover{filter:brightness(1.06);color:#fff}
+.frame{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface);box-shadow:0 30px 60px -40px #17161d55}
+.frame-bar{display:flex;align-items:center;gap:8px;height:38px;padding:0 14px;border-bottom:1px solid var(--line);background:var(--surface-2);font:500 12.5px/1 var(--mono);color:var(--muted)}
+.frame-bar i{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.frame-bar em{margin-left:6px;font-style:normal}
+.frame-bar a{margin-left:auto;color:var(--muted)}
+.frame iframe{display:block;width:100%;height:min(760px,82vh);border:0;background:#f6f7fa}
+.cap{margin-top:10px;color:var(--muted);font-size:14px}
+
+/* ── anatomy of the overlay: a drawing of the tool (light, like the tool) with ink callouts ── */
+.two{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:40px;align-items:start;margin-top:32px}
+.scroll-x{overflow-x:auto;padding:14px 4px 6px}
+.mock{position:relative;min-width:640px;aspect-ratio:16/10.4;display:grid;grid-template-columns:1fr 38%;border:1px solid #dcdbe3;border-radius:12px;overflow:hidden;background:#f6f7fa;font:12px/1.4 system-ui,sans-serif;color:#1b1d29;color-scheme:light}
+.m-scr{position:relative;padding:18px 20px}
+.m-h{height:14px;width:34%;border-radius:4px;background:#1b1d29;margin-bottom:6px}
+.m-s{height:8px;width:22%;border-radius:4px;background:#b8bac7;margin-bottom:16px}
+.m-tb{display:flex;gap:6px;margin-bottom:10px}
+.m-tb span{height:22px;border-radius:6px;background:#fff;border:1px solid #e1e2ea}
+.m-list{border:1px solid #e1e2ea;border-radius:8px;background:#fff}
+.m-row{display:grid;grid-template-columns:18px 1fr 44px 58px;align-items:center;gap:8px;height:34px;padding:0 10px;border-top:1px solid #eef0f4}
+.m-row:first-child{border-top:0}
+.m-row i{width:12px;height:12px;border:1.5px solid #c3c5d0;border-radius:3px}
+.m-row b{height:7px;border-radius:4px;background:#2b2e3d;width:62%}
+.m-row u{height:7px;border-radius:4px;background:#b8bac7}
+.m-row s{display:flex;align-items:center;gap:4px;text-decoration:none;font-size:10px;color:#1d6f45}
+.m-row s::before{content:'';width:6px;height:6px;border-radius:50%;background:#23a15c}
+.m-row s.w{color:#a45407} .m-row s.w::before{background:#e08a14}
+.m-row s.r{color:#b42727} .m-row s.r::before{background:#d93b3b}
+.m-ring{position:absolute;border:2px solid #d6246e;border-radius:6px;pointer-events:none}
+.m-ring b{position:absolute;left:-10px;top:-10px;display:grid;place-items:center;width:18px;height:18px;border-radius:50%;background:#d6246e;color:#fff;font:700 10px/1 system-ui;box-shadow:0 0 0 2px #fff}
+.m-rel{position:absolute;border:2px dashed #d6246e;border-radius:6px;background:#d6246e08}
+.m-rel em{position:absolute;left:4px;top:-9px;padding:0 5px;border-radius:99px;background:#fff;box-shadow:0 0 0 1.2px #d6246e;font:600 9px/15px system-ui;font-style:normal;color:#d6246e;white-space:nowrap}
+.m-btn{position:absolute;right:12px;bottom:12px;display:flex;align-items:center;gap:6px;height:26px;padding:0 10px 0 5px;border-radius:99px;background:#14161f;color:#fff;font-weight:600;font-size:11px}
+.m-btn i{display:grid;place-items:center;width:17px;height:17px;border-radius:50%;background:#d6246e;font-style:normal;font-size:10px}
+.m-pan{display:flex;flex-direction:column;background:#fff;border-left:1px solid #e4e4ea}
+.m-ph{display:flex;align-items:flex-start;gap:6px;padding:10px 10px 8px 12px;border-bottom:1px solid #efeff2}
+.m-ph div{flex:1}
+.m-ph small{display:block;color:#d6246e;font-weight:600;font-size:9.5px}
+.m-ph strong{font-size:12.5px}
+.m-full{height:18px;padding:0 7px;border:1px solid #e4e4ea;border-radius:99px;font-size:9.5px;line-height:16px;color:#52525b}
+.m-chips{display:flex;gap:4px;padding:8px 12px;border-bottom:1px solid #efeff2;overflow:hidden}
+.m-chips span{flex:none;height:18px;padding:0 7px;border:1px solid #e4e4ea;border-radius:99px;font-size:9.5px;line-height:16px;color:#3f3f46}
+.m-chips span.on{background:#d6246e;border-color:#d6246e;color:#fff}
+.m-chips span.auto{border-style:dashed}
+.m-notes{flex:1;display:flex;flex-direction:column;gap:6px;padding:10px 12px;overflow:hidden}
+.m-note{display:grid;grid-template-columns:16px 1fr;gap:7px;padding:8px;border:1px solid #ececf0;border-radius:6px}
+.m-note.on{border-color:#d6246e;box-shadow:0 0 0 2px #d6246e1a}
+.m-note > b{display:grid;place-items:center;width:16px;height:16px;border-radius:50%;background:#d6246e;color:#fff;font-size:9px}
+.m-note p{font-size:10px;line-height:1.4;color:#27272a}
+.m-note .t{display:flex;align-items:center;gap:5px;font-weight:600;font-size:10.5px;color:#18181b}
+.m-v{font-size:8.5px;padding:0 5px;border-radius:99px;line-height:14px;background:#e7f5ed;color:#16663f}
+.m-v.ch{background:#fde8f1;color:#a3134e}
+.m-lv{margin-right:4px;font-size:8px;font-weight:650;letter-spacing:.05em;color:#a1a1aa}
+.m-ft{display:flex;gap:5px;align-items:center;padding:8px 12px;border-top:1px solid #efeff2}
+.m-ft span{height:20px;padding:0 7px;border:1px solid #e4e4ea;border-radius:5px;font-size:9.5px;line-height:18px;color:#3f3f46}
+.m-ft .go{background:#d6246e;border-color:#d6246e;color:#fff}
+.m-ft .sp{margin-left:auto}
+.m-vl{position:absolute;border-left:1.5px dashed #d6246e}
+/* the guide's own callouts: ink, so they never read as the tool */
+.co{position:absolute;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--callout);color:var(--callout-ink);font:600 12px/1 var(--mono);box-shadow:0 0 0 3px var(--paper);z-index:2;transition:transform .15s}
+.co.hot{transform:scale(1.25)}
+.legend{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.legend li{display:grid;grid-template-columns:26px 1fr;gap:12px;padding:10px 12px;border-radius:10px;cursor:default}
+.legend li:hover,.legend li.hot{background:var(--surface)}
+.legend li > span{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--callout);color:var(--callout-ink);font:600 12px/1 var(--mono)}
+.legend b{display:block;font-weight:600}
+.legend p{color:var(--ink-2);font-size:14.5px;line-height:1.5}
+
+/* ── anatomy of a decision ── */
+.note-x{position:relative;padding:18px 18px 18px 16px;border:1.5px solid #d6246e;border-radius:12px;background:#fff;box-shadow:0 0 0 4px #d6246e14;color:#3f3f46;font:13.5px/1.55 system-ui,-apple-system,'Segoe UI',sans-serif;color-scheme:light}
+.note-x .hd{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font-weight:600;color:#18181b}
+.note-x .n{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#d6246e;color:#fff;font-size:12px;font-weight:700}
+.chip{display:inline-block;font:600 11px/18px system-ui,sans-serif;padding:0 7px;border-radius:99px;white-space:nowrap}
+.c-ok{background:#e7f5ed;color:#16663f} .c-ch{background:#fde8f1;color:#a3134e} .c-q{background:#f1f1f4;color:#52525b}
+.c-pr{background:#e8effd;color:#1c46b8} .c-bad{background:#fdecea;color:#b42318} .c-ex{background:#f4f4f5;color:#71717a}
+.note-x .d{margin-top:6px;color:#27272a}
+.note-x .d i{margin-right:6px;font-style:normal;font-size:10.5px;font-weight:650;letter-spacing:.05em;color:#a1a1aa}
+.note-x p{margin-top:8px}
+.note-x dl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;margin:10px 0 0;font-size:12.5px}
+.note-x dt{font-weight:600;color:#71717a}
+.note-x dd{margin:0}
+.note-x .was{margin-top:10px;padding:6px 8px;border-radius:6px;background:#fafafb}
+.note-x .was b{color:#71717a;margin-right:4px}
+.note-x .ps{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.note-x .ps span{padding:1px 8px;border:1px solid #e4e4ea;border-radius:99px;font-size:11.5px;color:#52525b}
+.fld{position:relative}
+.fld[data-f]::before{content:attr(data-f);position:absolute;left:-58px;top:1px;width:44px;padding:1px 0;border-radius:4px;background:var(--callout);color:var(--callout-ink);font:500 10.5px/1.5 var(--mono);text-align:center}
+.note-wrap{padding-left:58px}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.fields div{padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.fields code{display:inline-block;padding:0 6px;border-radius:4px;background:var(--callout);color:var(--callout-ink);font-size:12px}
+.fields b{margin-left:8px;font-weight:600}
+.fields p{margin-top:4px;color:var(--ink-2);font-size:14.5px;line-height:1.5}
+.fields .req{grid-column:1/-1;border-color:var(--accent);background:var(--accent-soft)}
+
+/* ── levels ── */
+.ladder{margin-top:28px;border-top:1px solid var(--line)}
+.rung{display:grid;grid-template-columns:130px 150px minmax(0,1fr) minmax(0,.9fr);gap:20px;align-items:baseline;padding:16px 4px;border-bottom:1px solid var(--line)}
+.rung code{font-size:14px;font-weight:500;color:var(--ink)}
+.scope{align-self:center;height:10px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.scope i{display:block;height:100%;border-radius:99px;background:var(--accent)}
+.rung p{color:var(--ink-2);font-size:15px}
+.rung .eg{color:var(--muted);font-size:14px}
+.rung .eg::before{content:'e.g. ';font-family:var(--mono);font-size:12px}
+
+/* ── verdicts ── */
+.vgroups{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:20px;margin-top:28px}
+.vg{padding:20px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.vg h3{font-size:16px;margin-bottom:12px}
+.vg h3 small{margin-left:6px;font:400 13px var(--body);color:var(--muted)}
+.vlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.vlist li{display:grid;grid-template-columns:118px 1fr;gap:12px;align-items:baseline;font-size:15px;color:var(--ink-2)}
+.v{justify-self:start;font:600 12px/20px var(--body);padding:0 9px;border-radius:99px}
+.v-ok{background:var(--ok-bg);color:var(--ok)} .v-ch{background:var(--ch-bg);color:var(--ch)} .v-ex{background:var(--ex-bg);color:var(--ex)}
+.v-q{background:var(--q-bg);color:var(--q)} .v-pr{background:var(--pr-bg);color:var(--pr)} .v-bad{background:var(--bad-bg);color:var(--bad)}
+
+/* ── jobs ── */
+.jobs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:28px}
+.job{display:flex;flex-direction:column;gap:14px;padding:22px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+.job h3{font-size:22px}
+.job .when{color:var(--ink-2)}
+.job dl{margin:0;display:flex;flex-direction:column;gap:10px}
+.job dt{font:500 11.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.job dd{margin:4px 0 0;font-size:15px;color:var(--ink)}
+.job ol{margin:4px 0 0;padding-left:20px;font-size:15px}
+.job ol li{margin-top:3px}
+.job .btn{margin-top:auto;align-self:flex-start}
+
+/* ── a review, start to finish ── */
+.flow{list-style:none;margin:28px 0 0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;counter-reset:s}
+.flow li{position:relative;padding:0 14px 0 0;counter-increment:s}
+.flow li::before{content:counter(s);display:grid;place-items:center;width:30px;height:30px;margin-bottom:12px;border-radius:50%;border:2px solid var(--accent);color:var(--accent-ink);font:600 13px/1 var(--mono);background:var(--paper);position:relative;z-index:1}
+.flow li::after{content:'';position:absolute;left:30px;right:0;top:15px;border-top:2px dashed var(--line)}
+.flow li:last-child::after{display:none}
+.flow b{display:block;font-weight:600;margin-bottom:4px}
+.flow p{color:var(--ink-2);font-size:14.5px;line-height:1.5}
+.flow .who{display:inline-block;margin-top:8px;font:500 11.5px/1.6 var(--mono);color:var(--muted)}
+
+/* ── hosts ── */
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-top:28px}
+.tabs button{height:38px;padding:0 16px;border:1px solid var(--line);border-radius:99px;background:var(--surface);color:var(--ink);font:500 14.5px/1 var(--body);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.host{margin-top:16px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:24px;align-items:start}
+.host ul{margin:10px 0 0;padding-left:20px;color:var(--ink-2)}
+.host ul li{margin-top:6px}
+pre{margin:0;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow-x:auto;font:13px/1.6 var(--mono);color:var(--ink)}
+pre .c{color:var(--muted)}
+pre .k{color:var(--accent-ink)}
+
+/* ── ask Claude ── */
+.asks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:28px}
+.ask{display:flex;gap:12px;align-items:flex-start;padding:14px 14px 14px 18px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.ask div{flex:1}
+.ask q{display:block;font-weight:500;quotes:'“' '”'}
+.ask p{margin-top:4px;color:var(--muted);font-size:14px}
+.copy{flex:none;height:30px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink-2);font:500 12.5px/1 var(--body);cursor:pointer}
+.copy:hover{border-color:var(--accent);color:var(--accent-ink)}
+
+/* ── better than before ── */
+.better{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 32px;margin-top:24px;border-top:1px solid var(--line)}
+.better div{display:grid;grid-template-columns:150px 1fr;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
+.better b{font-weight:600}
+.better p{color:var(--ink-2);font-size:15px}
+
+/* ── for experts: four lenses ── */
+.v-add{background:var(--ok-bg);color:var(--ok)} .v-chg{background:var(--amb-bg);color:var(--amb)} .v-mov{background:var(--pr-bg);color:var(--pr)} .v-rem{background:var(--bad-bg);color:var(--bad)}
+.vg.wide{grid-column:1/-1}
+.vrow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.vrow li{display:flex;flex-direction:column;gap:6px;font-size:14.5px;line-height:1.5;color:var(--ink-2)}
+.lenses{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:28px}
+.lens{display:flex;flex-direction:column;gap:12px;padding:22px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+.lens .lq{font:500 15px/1.45 var(--body);color:var(--accent-ink);quotes:'“' '”'}
+.lens h3{font-size:22px}
+.lens > p{color:var(--ink-2);font-size:15px}
+.lens ul{margin:0;padding-left:18px;color:var(--ink);font-size:15px}
+.lens ul li + li{margin-top:4px}
+.reads{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13.5px;color:var(--muted)}
+.reads code{padding:0 6px;border-radius:4px;background:var(--callout);color:var(--callout-ink);font-size:12px}
+.lens .btn{margin-top:auto;align-self:flex-start}
+.proof{display:flex;flex-wrap:wrap;gap:8px 28px;margin-top:20px;padding:16px 20px;border:1px dashed var(--line);border-radius:12px;font-size:14.5px;color:var(--ink-2)}
+.proof b{font-family:var(--mono);font-weight:500;font-size:13px;color:var(--ink)}
+.proof span{display:flex;flex-direction:column;gap:2px}
+.proof small{font:500 11.5px/1.3 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+/* the Inspect card, drawn the way the tool draws it (light, like the tool) */
+.insp{display:flex;flex-direction:column;gap:14px}
+.insp-x{display:flex;flex-direction:column;gap:10px;padding:16px 18px;border:1.5px solid #d6246e;border-radius:12px;background:#fff;box-shadow:0 0 0 4px #d6246e14;color:#27272a;font:13px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif;color-scheme:light}
+.insp-x .cr{display:flex;flex-wrap:wrap;align-items:center;gap:4px;color:#a1a1aa;font-size:12px}
+.insp-x .cr span{padding:0 7px;border-radius:4px;background:#f4f4f6;color:#52525b;line-height:22px}
+.insp-x .cr span.on{background:#18181b;color:#fff}
+.insp-x .ih{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:650;color:#18181b}
+.insp-x .ih i,.insp-x .lvl{font-style:normal;font-size:10.5px;font-weight:650;letter-spacing:.05em;color:#a1a1aa}
+.insp-x .kids{display:flex;flex-wrap:wrap;align-items:center;gap:4px;font-size:12px}
+.insp-x .kids b{margin-right:4px;color:#71717a}
+.insp-x .kids span{padding:0 7px;border-radius:4px;background:#f4f4f6;color:#52525b;line-height:22px}
+.insp-x dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;margin:0;padding:10px 12px;border:1px solid #ececf0;border-radius:8px;font-size:12.5px}
+.insp-x dt{font-weight:600;color:#71717a}
+.insp-x dd{margin:0}
+.insp-x dd small{color:#a1a1aa}
+.insp-x code{font:12px/1.4 ui-monospace,Consolas,monospace;color:#52525b}
+.insp-x .ok{color:#16663f}
+.insp-x .warn{color:#b42318;font-weight:600}
+.insp-x .sw{display:inline-block;width:12px;height:12px;margin-right:6px;border-radius:3px;vertical-align:-1px;box-shadow:inset 0 0 0 1px #0000001f}
+.insp-x .dec{padding:10px 12px;border:1px solid #ececf0;border-radius:8px}
+.insp-x .dec b{display:flex;align-items:center;gap:8px;font-weight:600;color:#18181b}
+.insp-x .dec p{margin-top:4px}
+.insp-x .dec small{display:block;margin-top:4px;font-size:12px;color:#a1a1aa}
+.insp-x .chip{font-size:11px}
+.c-chg{background:#fef3e2;color:#8a4b08}
+.judge{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.judge li{display:grid;grid-template-columns:130px 1fr;gap:12px;align-items:baseline;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-size:14.5px;color:var(--ink-2)}
+.judge code{font-size:13px;color:var(--ink)}
+.judge .y{color:var(--ok);font-weight:500}
+.judge .n{color:var(--bad);font-weight:600}
+.sys{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start;margin-top:28px}
+
+.files{margin-top:24px}
+footer{padding-block:64px 48px;color:var(--muted);font-size:14px}
+
+@media (max-width:960px){
+  .two,.host,.vgroups,.lenses,.sys{grid-template-columns:1fr}
+  .vrow{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .jobs{grid-template-columns:1fr}
+  .flow{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 0}
+  .flow li:nth-child(2n)::after{display:none}
+  .rung{grid-template-columns:110px minmax(0,1fr);gap:6px 16px}
+  .rung .scope{grid-column:2;grid-row:1}
+  .rung p,.rung .eg{grid-column:1/-1}
+  .better,.asks,.fields{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  body{padding-inline:16px}
+  section{padding-block:56px 4px}
+  .flow{grid-template-columns:1fr}
+  .flow li::after{display:none}
+  .better div{grid-template-columns:1fr;gap:4px}
+  .vlist li{grid-template-columns:1fr;gap:4px}
+  .vrow{grid-template-columns:1fr}
+  .judge li{grid-template-columns:1fr;gap:4px}
+  .note-wrap{padding-left:0}
+  .fld[data-f]::before{position:static;display:inline-block;margin:0 6px 2px 0}
+  .frame iframe{height:640px}
+}
+@media (prefers-reduced-motion:reduce){ .co{transition:none} }
+</style>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">A skill for Claude Code · for UI/UX designers</p>
+  <h1>Explain <span class="ring"><b>1</b>Screen</span></h1>
+  <p class="lede">Every design decision, ringed on the live screen where it sits, with the reason, what was considered instead, what it costs, and the source it rests on. Your team sees the design and its argument together, so nobody has to ask why something is there.</p>
+  <ul class="facts">
+    <li>Works on the real screen, not a copy</li>
+    <li>One decision per note, one line to read</li>
+    <li>Every reason links to its source</li>
+    <li>Any project: prototype, app, or live site</li>
+    <li>Against what’s in production, down to the atom</li>
+  </ul>
+
+  <div class="stage">
+    <div class="drive" role="group" aria-label="Drive the demo">
+      <span>Try it on the demo:</span>
+      <button class="btn is-main" data-drive='{"xp":"open","id":"anatomy","v":"v2"}'>Open Explain</button>
+      <button class="btn" data-drive='{"xp":"open","id":"row","n":3,"v":"v2"}'>A decision with relations</button>
+      <button class="btn" data-drive='{"xp":"open","id":"review","n":2,"v":"v2"}'>Walk a flow</button>
+      <button class="btn" data-drive='{"xp":"open","id":"row","v":"v1"}'>Compare with v1</button>
+      <button class="btn" data-drive='{"xp":"open","id":"_f","v":"v2"}'>The findings</button>
+      <button class="btn" data-drive='{"xp":"open","id":"_b","v":"v2"}'>Against production</button>
+      <button class="btn" data-drive='{"xp":"open","v":"v2","inspect":".row[data-id=c1]"}'>Inspect a part</button>
+      <button class="btn" data-drive='{"xp":"open","id":"_c","v":"v2","audit":1}'>Audit the screen</button>
+    </div>
+    <div class="frame">
+      <div class="frame-bar"><i></i><i></i><i></i><em>demo/index.html · Acme Expenses (fictional)</em><a href="templates/demo/index.html" target="_blank" rel="noopener">Open on its own ↗</a></div>
+      <iframe id="demo" src="templates/demo/index.html" title="Explain demo: an expense approvals screen with the Explain panel"></iframe>
+    </div>
+    <p class="cap">Click into the demo and press <kbd>?</kbd>, or use the Explain button at its bottom right. Then <kbd>←</kbd> <kbd>→</kbd> change topics and <kbd>↑</kbd> <kbd>↓</kbd> step through notes. Clicking a note opens its full reasoning. To judge the screen at its real width, <kbd>M</kbd> shrinks the panel to a card you can drag, and <kbd>H</kbd> hides everything until you press it again.</p>
+  </div>
+</header>
+
+<section id="overlay" aria-labelledby="h-overlay">
+  <p class="eyebrow">What you’re looking at</p>
+  <h2 id="h-overlay">A panel of topics, and rings on the real screen</h2>
+  <p class="sub">Magenta is the tool. It sits on top of the product and never takes the product’s colours, so nobody mistakes a ring for UI. The dark circles below are this guide pointing at the parts.</p>
+  <div class="two">
+    <div class="scroll-x">
+      <div class="mock" id="mock" aria-hidden="true">
+        <div class="m-scr">
+          <div class="m-h"></div><div class="m-s"></div>
+          <div class="m-tb"><span style="width:34%"></span><span style="width:30%"></span><span style="width:16%;margin-left:auto"></span></div>
+          <div class="m-list">
+            <div class="m-row"><i></i><b></b><u></u><s class="w">Over policy</s></div>
+            <div class="m-row"><i></i><b style="width:48%"></b><u></u><s>Ready</s></div>
+            <div class="m-row"><i></i><b style="width:40%"></b><u></u><s class="r">No receipt</s></div>
+            <div class="m-row"><i></i><b style="width:55%"></b><u></u><s>Ready</s></div>
+            <div class="m-row"><i></i><b style="width:44%"></b><u></u><s>Ready</s></div>
+          </div>
+          <div class="m-ring" style="left:calc(100% - 92px);top:100px;width:66px;height:24px"><b>3</b></div>
+          <div class="m-ring" style="left:52px;top:100px;width:120px;height:24px;opacity:.3"><b>1</b></div>
+          <div class="m-vl" style="left:calc(100% - 59px);top:126px;height:75px"></div>
+          <div class="m-rel" style="left:calc(100% - 92px);top:203px;width:66px;height:24px"><em>same on every row</em></div>
+          <div class="m-btn"><i>?</i>Explain</div>
+        </div>
+        <div class="m-pan">
+          <div class="m-ph"><div><small>Explain · Approvals · v2</small><strong>A claim row</strong></div><span class="m-full">Full detail</span></div>
+          <div class="m-chips"><span>The screen 5</span><span class="on">A claim row 6</span><span>Toolbar 3</span><span class="auto">Findings 6</span></div>
+          <div class="m-notes">
+            <div class="m-note"><b>1</b><div><div class="t">The person first <span class="m-v">Keep</span></div><p><span class="m-lv">ELEMENT</span>Name in bold, purpose under it.</p></div></div>
+            <div class="m-note"><b>2</b><div><div class="t">Amounts line up <span class="m-v">Keep</span></div><p><span class="m-lv">ELEMENT</span>Right-aligned, tabular figures.</p></div></div>
+            <div class="m-note on"><b>3</b><div><div class="t">A dot and a word <span class="m-v ch">Changed</span></div><p><span class="m-lv">ELEMENT</span>The word carries the meaning; the dot only speeds it up.</p></div></div>
+          </div>
+          <div class="m-ft"><span>‹</span><span>2 / 8</span><span>›</span><span class="sp">+ Note</span><span class="go">Compare with v1 ›</span></div>
+        </div>
+        <span class="co" data-co="1" style="right:calc(38% + 96px);bottom:13px">1</span>
+        <span class="co" data-co="2" style="left:calc(62% - 12px);top:57px">2</span>
+        <span class="co" data-co="3" style="right:4px;top:216px">3</span>
+        <span class="co" data-co="4" style="left:calc(62% - 24px);top:100px">4</span>
+        <span class="co" data-co="5" style="left:calc(62% - 24px);top:203px">5</span>
+        <span class="co" data-co="6" style="right:74px;top:9px">6</span>
+        <span class="co" data-co="7" style="right:115px;bottom:34px">7</span>
+        <span class="co" data-co="8" style="right:40px;bottom:34px">8</span>
+      </div>
+    </div>
+    <ol class="legend" id="legend">
+      <li data-co="1"><span>1</span><div><b>The Explain button</b><p>Bottom right on any screen that has notes, with how many. <kbd>?</kbd> opens and closes it.</p></div></li>
+      <li data-co="2"><span>2</span><div><b>Topics</b><p>One per part of the screen, in the order people understand it. Dashed chips are built for you: Findings, Drafts, Principles.</p></div></li>
+      <li data-co="3"><span>3</span><div><b>A note</b><p>Number, title, verdict, level, and the decision in one line. Click it for the why, the alternative, the cost and the sources.</p></div></li>
+      <li data-co="4"><span>4</span><div><b>The ring</b><p>Drawn on the real element with the same number. Opening a topic first puts the screen in the state the topic needs.</p></div></li>
+      <li data-co="5"><span>5</span><div><b>A relation</b><p>Dashed ring, line and label: what this decision depends on or has to agree with.</p></div></li>
+      <li data-co="6"><span>6</span><div><b>Mini · Hide · Full detail</b><p>Mini shrinks the panel to a card over the screen, and Hide removes everything, so the screen is judged at its real width. Full detail off shows one line per decision, for presenting; on shows every reason, for reading alone.</p></div></li>
+      <li data-co="7"><span>7</span><div><b>+ Note</b><p>Pick any part of the screen and write a note on it. Reviewers use it to leave findings in place.</p></div></li>
+      <li data-co="8"><span>8</span><div><b>Compare</b><p>Switch to the other version on the same topic, to see what changed and why.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<section id="note" aria-labelledby="h-note">
+  <p class="eyebrow">Anatomy of a decision</p>
+  <h2 id="h-note">One note answers the questions a review asks</h2>
+  <p class="sub">Only the decision is required. Every other field answers one question someone will ask in the room, so it can be answered before it is asked.</p>
+  <div class="two">
+    <div class="note-wrap">
+      <div class="note-x">
+        <div class="hd fld" data-f="t · v"><span class="n">3</span>Status: a dot and a word <span class="chip c-ch">Changed</span></div>
+        <p class="d fld" data-f="lv · d"><i>ELEMENT</i>The word carries the meaning; the dot only speeds it up.</p>
+        <p class="fld" data-f="w">Colour is never the only signal, so the status survives colour-blindness, greyscale printouts and a glance.</p>
+        <dl class="fld" data-f="alt">
+          <dt>Instead of</dt><dd>Filled pills (v1). Five saturated pills in a column out-shout the names beside them.</dd>
+        </dl>
+        <dl class="fld" data-f="rel"><dt>Relates</dt><dd>same grammar on every row</dd></dl>
+        <p class="was fld" data-f="was"><b>Was</b>Filled colour pills with white text.</p>
+        <div class="ps fld" data-f="p"><span>WCAG 1.4.1 Use of colour</span><span>Indicators, validations, notifications</span><span>Selective attention</span></div>
+      </div>
+    </div>
+    <div class="fields">
+      <div class="req"><code>d</code><b>What did we decide?</b><p>One line, stated as a choice. “Status is a dot and a word”, not “This is the status”. Always there.</p></div>
+      <div><code>w</code><b>Why?</b><p>The user’s task, and the principle it rests on.</p></div>
+      <div><code>alt</code><b>Why not the obvious other way?</b><p>What was considered and dropped. It answers the question every review asks.</p></div>
+      <div><code>b</code><b>What does it cost?</b><p>The honest downside. A choice with no cost usually wasn’t a choice.</p></div>
+      <div><code>rel</code><b>What does it touch?</b><p>Other parts it depends on, drawn as dashed lines on the screen.</p></div>
+      <div><code>p</code><b>What does it rest on?</b><p>NN/g, Laws of UX, WCAG 2.2, ARIA, Material, Fluent, HIG: 89 sources, every link checked.</p></div>
+      <div><code>ref</code><b>Who else does it?</b><p>A real product that works the same way, named only when verified.</p></div>
+      <div><code>fix · was</code><b>What now, what before?</b><p>The fix for an issue, or what a change replaced.</p></div>
+      <div><code>setup</code><b>Show me</b><p>Puts the screen in the note’s state: a drawer open, an error showing, a step of a flow.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="levels" aria-labelledby="h-levels">
+  <p class="eyebrow">Seven levels</p>
+  <h2 id="h-levels">From one word on the screen to the whole product</h2>
+  <p class="sub">Writing notes means walking the screen at every level and asking that level’s questions. Whatever survives the question becomes a note, and whatever doesn’t survive gets questioned: does it need to exist?</p>
+  <div class="ladder">
+    <div class="rung"><code>element</code><div class="scope"><i style="width:14%"></i></div><p>Why this word, size, weight, colour, icon, position? What does it look like in every state?</p><p class="eg">amounts right-aligned in tabular figures</p></div>
+    <div class="rung"><code>group</code><div class="scope"><i style="width:28%"></i></div><p>Why are these together, what holds them together, and why this order?</p><p class="eg">the whole row is one button</p></div>
+    <div class="rung"><code>component</code><div class="scope"><i style="width:42%"></i></div><p>Why this control and not the usual alternative? What is its default, and why?</p><p class="eg">segmented control over a drop-down</p></div>
+    <div class="rung"><code>section</code><div class="scope"><i style="width:57%"></i></div><p>What job does it do? Why here, why this size, what does it push away?</p><p class="eg">search, then status, then sort</p></div>
+    <div class="rung"><code>screen</code><div class="scope"><i style="width:71%"></i></div><p>What is the one thing to do here? What is the reading order? What was left out?</p><p class="eg">no KPI tiles: one summary line</p></div>
+    <div class="rung"><code>step</code><div class="scope"><i style="width:86%"></i></div><p>What does the user see and do now? What can go wrong, and how do they get back?</p><p class="eg">approve, then Undo, instead of a confirm</p></div>
+    <div class="rung"><code>system</code><div class="scope"><i style="width:100%"></i></div><p>Does it hold everywhere: one meaning per colour, one name per thing, one format per fact?</p><p class="eg">indigo only ever means “act”</p></div>
+  </div>
+</section>
+
+<section id="verdicts" aria-labelledby="h-verdicts">
+  <p class="eyebrow">Verdicts</p>
+  <h2 id="h-verdicts">Every note says how settled it is</h2>
+  <div class="vgroups">
+    <div class="vg"><h3>Settled <small>what the design is</small></h3>
+      <ul class="vlist">
+        <li><span class="v v-ok">Keep</span>Sound, and it stays.</li>
+        <li><span class="v v-ok">Kept</span>Checked again, unchanged from the last version.</li>
+        <li><span class="v v-ex">Existing</span>The live product already does this: the baseline of a redesign.</li>
+        <li><span class="v v-ch">New</span>Added in this version.</li>
+        <li><span class="v v-ch">Changed</span>Different from before, and the note says what it was.</li>
+      </ul></div>
+    <div class="vg"><h3>Open <small>collected into Findings</small></h3>
+      <ul class="vlist">
+        <li><span class="v v-bad">Issue</span>A problem, always with its fix.</li>
+        <li><span class="v v-q">Open question</span>The team decides.</li>
+        <li><span class="v v-pr">Proposal</span>An idea beyond the brief.</li>
+      </ul>
+      <p class="sub" style="font-size:14.5px;margin-top:16px">Findings stay findings until someone picks. The Findings topic gathers them from every topic and copies them as Markdown, with a link to each one on the screen.</p></div>
+    <div class="vg wide"><h3>Against the baseline <small>the same notes, read against what’s in production</small></h3>
+      <ul class="vrow">
+        <li><span class="v v-rem">Removed</span>Gone from the screen. It can’t be ringed, so it’s listed with what replaced it.</li>
+        <li><span class="v v-chg">Changed</span>Still there, done differently. The note says what production had.</li>
+        <li><span class="v v-mov">Moved</span>The same thing in a new place, like a date that moved to the right edge.</li>
+        <li><span class="v v-add">Added</span>New to the product. It often needs data the backend doesn’t keep yet.</li>
+        <li><span class="v v-ex">Same</span>Kept from production on purpose, so people don’t relearn it.</li>
+      </ul></div>
+  </div>
+</section>
+
+<section id="jobs" aria-labelledby="h-jobs">
+  <p class="eyebrow">How a designer uses it</p>
+  <h2 id="h-jobs">Showcase, decide, review</h2>
+  <p class="sub">The same notes do three jobs. What changes is what you write first and what you take away.</p>
+  <div class="jobs">
+    <article class="job">
+      <h3>Showcase</h3>
+      <p class="when">Presenting a design to your team, a PM or a client.</p>
+      <dl>
+        <div><dt>In the room</dt><dd><ol><li>Open Explain on the screen itself.</li><li>Step the topics with <kbd>→</kbd>: the screen, its sections, then a flow.</li><li>Flow steps set the screen up themselves, so nothing is clicked by hand.</li></ol></dd></div>
+        <div><dt>You get</dt><dd>“Why is this here?” is answered before anyone asks. A link like <code>?xp=4.2</code> opens straight on a decision for the deck or the chat.</dd></div>
+      </dl>
+      <button class="btn" data-drive='{"xp":"open","id":"review","n":1,"v":"v2"}'>Show me</button>
+    </article>
+    <article class="job">
+      <h3>Decide</h3>
+      <p class="when">Two versions, or a choice still open.</p>
+      <dl>
+        <div><dt>In the room</dt><dd><ol><li>Each version has its own notes under the same topics.</li><li><b>Compare with</b> swaps the version and stays on the topic.</li><li>Every choice lists its alternative, and every change says what it replaced.</li></ol></dd></div>
+        <div><dt>You get</dt><dd>A decision per open question, with the reasons written down. The losing version is kept, with why it lost.</dd></div>
+      </dl>
+      <button class="btn" data-drive='{"xp":"open","id":"review","n":1,"v":"v1"}'>Show me</button>
+    </article>
+    <article class="job">
+      <h3>Review</h3>
+      <p class="when">Checking a screen: yours, a teammate’s, or what’s live.</p>
+      <dl>
+        <div><dt>In the room</dt><dd><ol><li>Reviewers press <b>+ Note</b>, click the part and type the finding.</li><li>It is ringed straight away and kept as a draft.</li><li>Findings gathers every issue, question and proposal.</li></ol></dd></div>
+        <div><dt>You get</dt><dd><b>Copy as Markdown</b> for the review doc or ticket, and <b>Copy as code</b> to make the drafts permanent notes.</dd></div>
+      </dl>
+      <button class="btn" data-drive='{"xp":"open","id":"_f","v":"v2"}'>Show me</button>
+    </article>
+  </div>
+</section>
+
+<section id="lenses" aria-labelledby="h-lenses">
+  <p class="eyebrow">For experts</p>
+  <h2 id="h-lenses">Four lenses on the same notes</h2>
+  <p class="sub">A redesign has to answer more than “why this?” What is different from what people use today? Why is this 15 pixels and not 16? Does the new flow cost fewer clicks than the old one? Which decisions still have no alternative written down? Each lens reads the notes you already have and answers one of these.</p>
+  <div class="lenses">
+    <article class="lens">
+      <q class="lq">What’s different from what we have?</q>
+      <h3>Against production</h3>
+      <p>A switch under the panel’s title reads every note against the live product instead of the last iteration. A topic lists the whole difference, part by part, with screenshots of production.</p>
+      <ul><li>Removed, changed, moved, added, same</li><li>What production had, in one line per part</li><li>The data each new part needs from the backend</li></ul>
+      <p class="reads">Reads <code>base</code><code>bv</code><code>bw</code><code>data</code></p>
+      <button class="btn" data-drive='{"xp":"open","id":"_b","v":"v2"}'>Show me</button>
+    </article>
+    <article class="lens">
+      <q class="lq">Why is it this big, this far apart, this colour?</q>
+      <h3>Inspect, down to the atom</h3>
+      <p>Hover any part of the real screen and click to pin it. The panel names where it sits in the whole and what it is made of, measures it, and judges every value by the design system.</p>
+      <ul><li>Screen › section › component › element</li><li>Size, padding, gap, radius, type, colour, token</li><li>Contrast and target size, against WCAG</li><li>Pin one part, hover another: the gap between them</li></ul>
+      <p class="reads">Reads <code>anatomy</code><code>rules</code> and every note’s selector</p>
+      <button class="btn" data-drive='{"xp":"open","v":"v2","inspect":".row[data-id=c1]"}'>Show me</button>
+    </article>
+    <article class="lens">
+      <q class="lq">Is the new way actually shorter?</q>
+      <h3>Flows, step for step</h3>
+      <p>A flow topic shows the same task as it is done in production beside the new steps, each marked by what the person does: a click, typing, a modal, a scroll, a read.</p>
+      <ul><li>Counted: clicks, typing, modals, then steps</li><li>The note under it says what the old way couldn’t do</li></ul>
+      <p class="reads">Reads <code>before</code> on the topic, <code>k</code> on each step</p>
+      <button class="btn" data-drive='{"xp":"open","id":"review","v":"v2"}'>Show me</button>
+    </article>
+    <article class="lens">
+      <q class="lq">What haven’t we justified yet?</q>
+      <h3>Coverage and audit</h3>
+      <p>A heatmap of which reasons the notes give at each level, from element to system. The screen audit counts every text style, gap and colour in use and flags whatever the system doesn’t cover.</p>
+      <ul><li>Why, instead, cost, source, baseline, states, access, data</li><li>Each audit row rings where that value is used</li><li>The decision log, for a doc or a spreadsheet</li></ul>
+      <p class="reads">Reads every note, and <code>rules</code><code>root</code></p>
+      <button class="btn" data-drive='{"xp":"open","id":"_c","v":"v2","audit":1}'>Show me</button>
+    </article>
+  </div>
+
+  <div class="two">
+    <div class="note-wrap insp" aria-label="The Inspect card for a claim row and for the name inside it">
+      <div class="insp-x">
+        <p class="cr fld" data-f="path"><span>Page</span>›<span>Claims list</span>›<span class="on">Claim row</span></p>
+        <p class="ih fld" data-f="name">Claim row <i>GROUP</i></p>
+        <p class="kids fld" data-f="parts"><b>Made of</b><span>Select</span><span>Avatar</span><span>Name</span><span>Purpose</span><span>Date</span><span>Amount</span><span>Status</span></p>
+        <dl class="fld" data-f="spec">
+          <dt>Size</dt><dd>990 × 63 <small>at 35, 239.5 · grid</small></dd>
+          <dt>Padding</dt><dd>10 16 10 8</dd>
+          <dt>Gap</dt><dd>12</dd>
+          <dt></dt><dd class="warn">⚠ 10 not on the spacing scale (4 · 8 · 12 · 16 · 20 · 24 · 32)</dd>
+          <dt>Border</dt><dd>1 0 0 0 solid <i class="sw" style="background:#e6e7ee"></i><code>#e6e7ee --line</code></dd>
+        </dl>
+        <div class="dec fld" data-f="notes"><b>The whole row opens the claim <span class="chip c-ex">Same</span></b><p>The row is the button, with a hover tint as its signifier.</p><small>A claim row · note 6</small></div>
+      </div>
+      <div class="insp-x">
+        <p class="cr fld" data-f="path"><span>Page</span>›<span>Claims list</span>›<span>Claim row</span>›<span class="on">Name</span></p>
+        <dl class="fld" data-f="rule">
+          <dt>Type</dt><dd>15/22 · 600 <span class="ok">✓ Names: who is asking, read first</span></dd>
+          <dt>Colour</dt><dd><i class="sw" style="background:#1b1d29"></i><code>#1b1d29 --ink</code></dd>
+          <dt>Contrast</dt><dd><b>16.74:1</b> on <code>#ffffff</code> <span class="ok">✓ AA, needs 4.5</span></dd>
+        </dl>
+      </div>
+    </div>
+    <div class="fields">
+      <div class="req"><code>path</code><b>Where does it sit?</b><p>From the screen down to this part. Names come from <code>anatomy</code> first, then from the notes that ring each part. Click a step to move up.</p></div>
+      <div><code>parts</code><b>What is it made of?</b><p>The named parts one level down: the atoms of a molecule, the molecules of a section.</p></div>
+      <div><code>spec</code><b>What is it, measured?</b><p>Read from the live page, never typed: size, padding, gap, radius, border, type, colour, fill, and the token each colour resolves to.</p></div>
+      <div><code>rule</code><b>Why this value?</b><p>The system rule it follows, or a warning when nothing in the system covers it.</p></div>
+      <div><code>notes</code><b>What did we decide about it?</b><p>Every note written on this part, from any topic, with its verdict.</p></div>
+      <div style="grid-column:1/-1"><code>gap</code><b>How far from that?</b><p>Pin one part, hover another: red lines with the distance. A black label means it’s off the scale.</p></div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:56px">The system, written once</h3>
+  <p class="sub">Nobody writes “15 px because…” two hundred times. The type scale, the spacing scale, what each colour means and the radii go into <code>rules</code> once. Inspect and the audit then answer every size, gap and colour question from it, and the gaps in the system show up on their own.</p>
+  <div class="sys">
+<pre><span class="c">// in the entry, or in EXPLAIN_CONFIG for every screen</span>
+rules: {
+  type:   { <span class="k">'24'</span>: <span class="k">'Title, one per screen'</span>,
+            <span class="k">'15/600'</span>: <span class="k">'Names: who is asking, read first'</span>,
+            <span class="k">'14'</span>: <span class="k">'Body and purpose'</span>, <span class="k">'12'</span>: <span class="k">'Labels'</span> },
+  space:  { v: [4, 8, 12, 16, 20, 24, 32], why: <span class="k">'The 4-point scale'</span> },
+  color:  { <span class="k">'--act'</span>: <span class="k">'Indigo = act'</span>, <span class="k">'--warn'</span>: <span class="k">'Amber = needs a look'</span>,
+            <span class="k">'--bad'</span>: <span class="k">'Red = blocked'</span>, <span class="k">'--ok'</span>: <span class="k">'Green = ready'</span> },
+  radius: { <span class="k">'8'</span>: <span class="k">'Controls and panels'</span> }
+},
+anatomy: [[<span class="k">'.row:not(.th)'</span>, <span class="k">'Claim row'</span>, <span class="k">'group'</span>], [<span class="k">'.row .who b'</span>, <span class="k">'Name'</span>, <span class="k">'element'</span>], …],
+root: <span class="k">'main'</span>   <span class="c">// what the audit reads</span></pre>
+    <div>
+      <p class="sub" style="margin-top:0">How a value is judged, from the demo:</p>
+      <ul class="judge">
+        <li><code>15 / 600</code><span><span class="y">✓ on the scale:</span> “Names: who is asking, read first”</span></li>
+        <li><code>padding 6</code><span><span class="n">⚠ not on the spacing scale,</span> in 18 places: add 6 to the system, or move them to 4 or 8.</span></li>
+        <li><code>padding 10</code><span><span class="n">⚠ not on the spacing scale.</span> Click the row and the audit rings all 11 places it’s used.</span></li>
+        <li><code>#e08a14</code><span><span class="y">✓ a meaning:</span> “Amber = needs a look”, from the <code>--warn-dot</code> token</span></li>
+        <li><code>#40407a</code><span><span class="n">⚠ saturated, no meaning set:</span> the avatar’s initials, a colour that says nothing yet.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="loop" aria-labelledby="h-loop">
+  <p class="eyebrow">One iteration, start to finish</p>
+  <h2 id="h-loop">Where Explain sits in the work</h2>
+  <ol class="flow">
+    <li><b>Build the screen</b><p>Prototype, app branch, or the live app as it is.</p><span class="who">you</span></li>
+    <li><b>Write the notes</b><p>Every level, every state, with sources and a consistency pass.</p><span class="who">Claude, with the skill</span></li>
+    <li><b>Check</b><p><code>xp.mjs check</code> proves every ring lands and every source exists.</p><span class="who">Claude</span></li>
+    <li><b>Present</b><p>Walk the topics with the team, on the real screen.</p><span class="who">you</span></li>
+    <li><b>Collect</b><p>Reviewers add + Note findings; Findings becomes the ticket.</p><span class="who">the team</span></li>
+    <li><b>Next version</b><p>A new entry, and Compare shows what changed and why.</p><span class="who">you + Claude</span></li>
+  </ol>
+</section>
+
+<section id="hosts" aria-labelledby="h-hosts">
+  <p class="eyebrow">Add it to any project</p>
+  <h2 id="h-hosts">Three kinds of host, one engine</h2>
+  <p class="sub">The engine is never edited per project. A project gives it three things: which screen is showing, how to reach a state, and room for the panel.</p>
+  <div class="tabs" role="tablist" aria-label="Host type">
+    <button role="tab" id="t-a" aria-selected="true" aria-controls="p-a">HTML prototype</button>
+    <button role="tab" id="t-b" aria-selected="false" aria-controls="p-b">App in code</button>
+    <button role="tab" id="t-c" aria-selected="false" aria-controls="p-c">Live app you can’t edit</button>
+  </div>
+  <div class="host" role="tabpanel" id="p-a" aria-labelledby="t-a">
+    <div><h3>Two tags and a notes file</h3><ul><li>One screen per page: nothing else to set.</li><li>Several screens: give each entry a <code>match</code> on the hash.</li><li>Versions: <code>other</code> on each entry and <code>show(id)</code> in the config.</li></ul></div>
+<pre><span class="c">&lt;!-- the page --&gt;</span>
+&lt;link rel="stylesheet" href="explain.css"&gt;
+&lt;script src="approvals.xp.js"&gt;&lt;/script&gt;
+&lt;script src="explain.js"&gt;&lt;/script&gt;
+
+<span class="c">// approvals.xp.js</span>
+EXPLAIN.approvals = { name: <span class="k">'Approvals · v2'</span>, topics: [
+  { id: <span class="k">'row'</span>, name: <span class="k">'A claim row'</span>, setup: () =&gt; DEMO.reset(), notes: [
+    { s: <span class="k">'.row .st'</span>, t: <span class="k">'A dot and a word'</span>, v: <span class="k">'change'</span>, lv: <span class="k">'element'</span>,
+      d: <span class="k">'The word carries the meaning.'</span>, p: [<span class="k">'w_color'</span>] }
+  ]}
+]};</pre>
+  </div>
+  <div class="host" role="tabpanel" id="p-b" aria-labelledby="t-b" hidden>
+    <div><h3>Dev builds only</h3><ul><li>Tag each screen root: <code>&lt;main data-explain="checkout"&gt;</code>, or match the route.</li><li>Router changes are picked up on their own.</li><li>Setups use the app’s dev hooks, or click the real UI with <code>XP.go</code> and <code>XP.click</code>.</li></ul></div>
+<pre><span class="c">// main.ts (Vite): React, Vue, Svelte …</span>
+<span class="k">if</span> (import.meta.env.DEV) {
+  import(<span class="k">'./explain/explain.css'</span>);
+  import(<span class="k">'./explain/checkout.xp.js'</span>)
+    .then(() =&gt; import(<span class="k">'./explain/explain.js'</span>));
+}
+
+<span class="c">// the app decides which screen it is</span>
+window.EXPLAIN_CONFIG = {
+  key: auto =&gt; store.modal ? <span class="k">'refund-dialog'</span> : auto()
+};</pre>
+  </div>
+  <div class="host" role="tabpanel" id="p-c" aria-labelledby="t-c" hidden>
+    <div><h3>Injected into your signed-in window</h3><ul><li>Staging, QA, production, or a competitor’s site.</li><li>Only your tab gets it. Nothing is sent anywhere, and closing the tab removes it.</li><li>Setups only navigate and click. They never save, send or delete shared data.</li></ul></div>
+<pre><span class="c"># opens a tab in the real-window-verify window</span>
+node .auth/xp.mjs open https://qa.example.com/orders \
+  --inject .auth/explain.css,.auth/explain.js,.auth/orders.xp.js \
+  --cdp 9224 --xp 1
+
+<span class="c"># prove every ring lands, on any host</span>
+node xp.mjs check demo/index.html</pre>
+  </div>
+</section>
+
+<section id="ask" aria-labelledby="h-ask">
+  <p class="eyebrow">Ask Claude</p>
+  <h2 id="h-ask">What to say in any project</h2>
+  <div class="asks">
+    <div class="ask"><div><q>Explain this screen for the team review on Thursday.</q><p>A full entry: anatomy, sections, flows, system and findings, checked.</p></div><button class="copy">Copy</button></div>
+    <div class="ask"><div><q>Review the checkout screen and give me the findings.</q><p>Mostly issues with fixes, questions and proposals, plus the Markdown.</p></div><button class="copy">Copy</button></div>
+    <div class="ask"><div><q>Add Explain to this prototype so I can present it.</q><p>Wires the engine for this host and writes the first topics.</p></div><button class="copy">Copy</button></div>
+    <div class="ask"><div><q>Compare v1 and v2 of onboarding, decision by decision.</q><p>Two entries with matching topics, and Compare between them.</p></div><button class="copy">Copy</button></div>
+    <div class="ask"><div><q>Put Explain on the live QA page so reviewers can mark issues.</q><p>Injected into the signed-in window, with + Note turned on.</p></div><button class="copy">Copy</button></div>
+    <div class="ask"><div><q>Turn these drafts into notes.</q><p>Paste what Copy as code gave you; Claude adds the why, the sources and the checks.</p></div><button class="copy">Copy</button></div>
+    <div class="ask"><div><q>Explain this redesign against what’s in production.</q><p>A baseline from real captures: what was removed, changed, moved and added, and each flow step for step.</p></div><button class="copy">Copy</button></div>
+    <div class="ask"><div><q>Audit this screen against our type and spacing scale.</q><p>The rules written once, then every size, gap and colour judged, with the decision log for the team.</p></div><button class="copy">Copy</button></div>
+  </div>
+</section>
+
+<section id="better" aria-labelledby="h-better">
+  <p class="eyebrow">What makes it different</p>
+  <h2 id="h-better">Made to travel, and built for reviews</h2>
+  <p class="sub">Most annotation tools are wired to one project. This engine runs anywhere: a prototype, an app in code, or a live site, configured rather than forked.</p>
+  <div class="better">
+    <div><b>Any host</b><p>Config in place of edits: which screen, how to switch versions, colour, label, push or float. It follows hash routes, pushState routers and screen roots on its own.</p></div>
+    <div><b>Live apps</b><p><code>xp.mjs open</code> injects Explain into staging or production in your signed-in window, without touching the app.</p></div>
+    <div><b>+ Note</b><p>Reviewers pick any part of the screen and write a finding. It gets a selector, a ring and a draft, which copies out as code.</p></div>
+    <div><b>Findings</b><p>Every issue, question and proposal, grouped and exported as Markdown with links, ready for a ticket.</p></div>
+    <div><b>Deep links</b><p><code>?xp=4.2</code> opens topic 4, note 2, with the screen set up. Every note has a copy-link button.</p></div>
+    <div><b>Your sources</b><p>Add the project’s design system or research to the source list, and your own verdicts and levels.</p></div>
+    <div><b>Keyboard and phone</b><p>Notes are reachable with Tab and Enter. On narrow windows the panel becomes a bottom sheet, so the rings stay visible.</p></div>
+    <div><b>Four more sources</b><p>WCAG 2.5.2, 2.2.1 and 2.4.11, and the ARIA modal dialog pattern: the gaps real reviews run into.</p></div>
+    <div><b>Against production</b><p>A redesign reads against what’s live, with the removed parts listed, not only against its last iteration.</p></div>
+    <div><b>Inspect and audit</b><p>Any part measured and judged by the design system, and the whole screen audited against it.</p></div>
+  </div>
+</section>
+
+<section id="files" aria-labelledby="h-files">
+  <p class="eyebrow">In the skill</p>
+  <h2 id="h-files">Six files, copied as they are</h2>
+<pre class="files">~/.claude/skills/explain-screen/
+  SKILL.md                 <span class="c">how Claude sets it up, writes notes, checks and hands over</span>
+  guide.html               <span class="c">this page</span>
+  references/hosts.md      <span class="c">wiring for prototypes, apps, live sites, and a complex host</span>
+  templates/explain.js     <span class="c">the engine: never edited per project</span>
+  templates/explain.css    <span class="c">the overlay</span>
+  templates/xp.mjs         <span class="c">check (every ring lands, every lens runs) · open (inject into a live app)</span>
+  templates/demo/          <span class="c">the worked example above: v1 and v2, 32 notes, a baseline, rules and anatomy</span></pre>
+</section>
+
+<footer>Explain Screen · a skill for Claude Code · the demo’s company, people and amounts are made up.</footer>
+</div>
+
+<script>
+/* drive the demo from the page's buttons */
+const demo = document.getElementById('demo');
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-drive]'); if (!b) return;
+  demo.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+  try { demo.contentWindow.postMessage(JSON.parse(b.dataset.drive), '*'); } catch {}
+});
+/* legend ↔ callouts */
+const hot = (n, on) => document.querySelectorAll(`[data-co="${n}"]`).forEach(el => el.classList.toggle('hot', on));
+document.querySelectorAll('#legend li, #mock .co').forEach(el => {
+  el.addEventListener('mouseenter', () => hot(el.dataset.co, true));
+  el.addEventListener('mouseleave', () => hot(el.dataset.co, false));
+});
+/* host tabs */
+const tabs = [...document.querySelectorAll('[role="tab"]')];
+tabs.forEach((t, i) => {
+  t.addEventListener('click', () => pick(i));
+  t.addEventListener('keydown', e => { const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (d){ e.preventDefault(); pick((i + d + tabs.length) % tabs.length, true); } });
+});
+function pick(i, focus){
+  tabs.forEach((t, k) => { t.setAttribute('aria-selected', k === i); t.tabIndex = k === i ? 0 : -1; document.getElementById(t.getAttribute('aria-controls')).hidden = k !== i; });
+  if (focus) tabs[i].focus();
+}
+pick(0);
+/* copy prompts */
+document.querySelectorAll('.ask').forEach(a => a.querySelector('.copy').addEventListener('click', async e => {
+  const text = a.querySelector('q').textContent, b = e.currentTarget;
+  try { await navigator.clipboard.writeText(text); b.textContent = 'Copied'; }
+  catch { const r = document.createRange(); r.selectNodeContents(a.querySelector('q')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Selected'; }
+  setTimeout(() => { b.textContent = 'Copy'; }, 1500);
+}));
+</script>

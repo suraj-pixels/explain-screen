@@ -1,0 +1,8 @@
+{
+  "hosting": {
+    "site": "explain-screen",
+    "public": "site",
+    "predeploy": ["node site.mjs"],
+    "ignore": ["**/.*"]
+  }
+}

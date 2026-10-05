@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Approvals · Explain demo</title>
+<!-- A worked example for the explain-screen skill: a fictional expense-approvals screen (Acme Expenses,
+     made-up people and amounts) with two versions. v2 is the design; v1 is the "before" it replaced.
+     demo.xp.js holds the Explain notes; EXPLAIN_CONFIG below tells the engine which version is on screen. -->
+<link rel="stylesheet" href="../explain.css">
+<style>
+:root{--ink:#1b1d29;--muted:#636779;--line:#e6e7ee;--bg:#f6f7fa;--card:#fff;--act:#4a4ae0;--act-2:#3c3cc4;
+  --warn:#a45407;--warn-dot:#e08a14;--bad:#b42727;--bad-dot:#d93b3b;--ok:#1d6f45;--ok-dot:#23a15c;--tint:#f0f0fd}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,-apple-system,'Segoe UI',sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--act);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.top{display:flex;align-items:center;gap:24px;height:56px;padding:0 24px;background:var(--card);border-bottom:1px solid var(--line)}
+.brand{font-weight:700;letter-spacing:-.01em}
+.brand span{color:var(--muted);font-weight:500}
+.top nav{display:flex;gap:4px;height:100%}
+.top nav a{display:flex;align-items:center;gap:6px;padding:0 12px;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;font-weight:500}
+.top nav a.is-on{color:var(--ink);border-color:var(--act)}
+.top nav a b{min-width:20px;height:20px;padding:0 6px;border-radius:99px;background:var(--act);color:#fff;font-size:12px;line-height:20px;text-align:center}
+.me{margin-left:auto;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#e7e7f3;color:#40407a;font-size:12px;font-weight:700}
+
+main{max-width:1040px;margin:0 auto;padding:28px 24px 64px}
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:20px}
+.head h1{margin:0;font-size:24px;line-height:1.2;letter-spacing:-.01em}
+.sum{margin:4px 0 0;color:var(--muted)}
+.sum b{color:var(--ink);font-weight:600}
+.btn{height:36px;padding:0 14px;border:1px solid #d5d6df;border-radius:8px;background:var(--card);font-weight:600;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:#b9bac6}
+.btn.primary{background:var(--act);border-color:var(--act);color:#fff}
+.btn.primary:hover{background:var(--act-2)}
+.btn:disabled{background:#ececf1;border-color:#ececf1;color:#9a9cab;cursor:default}
+
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:12px}
+.search{position:relative;flex:1 1 220px;max-width:320px}
+.search svg{position:absolute;left:10px;top:50%;translate:0 -50%;width:16px;height:16px;color:var(--muted)}
+.search input{width:100%;height:36px;padding:0 10px 0 34px;border:1px solid #d5d6df;border-radius:8px;background:var(--card)}
+.seg{display:inline-flex;padding:3px;border-radius:9px;background:#e9eaf0}
+.seg button{height:30px;padding:0 12px;border:0;border-radius:7px;background:none;color:var(--muted);font-weight:500;cursor:pointer}
+.seg button[aria-checked="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 2px #1b1d2922}
+.seg button span{margin-left:4px;color:#9a9cab;font-variant-numeric:tabular-nums}
+.sel{display:none}
+.sort{margin-left:auto;display:flex;align-items:center;gap:8px;color:var(--muted)}
+.sort select,.sel select{height:36px;padding:0 8px;border:1px solid #d5d6df;border-radius:8px;background:var(--card);color:var(--ink)}
+
+.list{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.row{display:grid;grid-template-columns:32px 36px minmax(0,1fr) 72px 96px 148px;align-items:center;gap:12px;padding:10px 16px 10px 8px;border-top:1px solid var(--line);cursor:pointer}
+.row.th{cursor:default;padding-block:8px;border-top:0;background:#fafafc;color:var(--muted);font-size:12px;font-weight:600}
+.row:not(.th):hover{background:#fafaff}
+.row.is-open{background:var(--tint)}
+.row .ck{display:grid;place-items:center;width:32px;height:32px;margin:-4px 0;cursor:pointer}
+.row .ck input{width:16px;height:16px;margin:0;accent-color:var(--act);cursor:pointer}
+.av{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:#eceef4;color:#4b4f63;font-size:12px;font-weight:700}
+.who{min-width:0}
+.who b{display:block;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who span{display:block;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row time{color:var(--muted);font-variant-numeric:tabular-nums}
+.amt{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.st{display:inline-flex;align-items:center;gap:6px;font-weight:500;white-space:nowrap}
+.st i{width:8px;height:8px;border-radius:50%;background:currentColor}
+.st--warn{color:var(--warn)} .st--warn i{background:var(--warn-dot)}
+.st--bad{color:var(--bad)} .st--bad i{background:var(--bad-dot)}
+.st--ok{color:var(--ok)} .st--ok i{background:var(--ok-dot)}
+.st--done{color:var(--muted)} .st--done i{background:#b7b9c6}
+.empty{padding:56px 24px;text-align:center}
+.empty h2{margin:0 0 6px;font-size:17px}
+.empty p{margin:0 auto 16px;max-width:36ch;color:var(--muted)}
+
+/* the claim, in a side sheet beside the list */
+.sheet{position:fixed;top:0;right:0;bottom:0;width:360px;display:flex;flex-direction:column;background:var(--card);border-left:1px solid var(--line);box-shadow:-18px 0 40px -28px #1b1d2960;z-index:20}
+.sheet[hidden]{display:none}
+.sheet header{display:flex;align-items:center;gap:12px;padding:16px 16px 16px 20px;border-bottom:1px solid var(--line)}
+.sheet header div{flex:1;min-width:0}
+.sheet header b{display:block;font-size:15px}
+.sheet header span{color:var(--muted);font-size:13px}
+.x{display:grid;place-items:center;width:32px;height:32px;border:0;border-radius:6px;background:none;color:var(--muted);cursor:pointer;font-size:16px}
+.x:hover{background:#f1f1f5;color:var(--ink)}
+.sheet .in{flex:1;overflow:auto;padding:20px}
+.big{font-size:28px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.sheet .what{margin:2px 0 16px;color:var(--muted)}
+.receipt{height:120px;margin-bottom:16px;border:1px dashed #cfd1dc;border-radius:10px;background:repeating-linear-gradient(0deg,#fbfbfd 0 14px,#f3f4f8 14px 15px);display:grid;place-items:center;color:var(--muted);font-size:13px}
+.receipt.is-none{background:#fff7f7;border-color:#efc2c2;color:var(--bad)}
+.checks{list-style:none;margin:0 0 18px;padding:0;display:flex;flex-direction:column;gap:6px}
+.checks li{display:flex;gap:8px;align-items:baseline}
+.checks li::before{flex:none;width:16px;font-weight:700}
+.checks .ok::before{content:'✓';color:var(--ok)}
+.checks .bad::before{content:'!';color:var(--bad);text-align:center}
+.note label{display:block;margin-bottom:4px;font-size:13px;font-weight:600}
+.note textarea{width:100%;min-height:72px;padding:8px 10px;border:1px solid #d5d6df;border-radius:8px;resize:vertical}
+.note textarea[aria-invalid="true"]{border-color:var(--bad)}
+.err{margin:4px 0 0;color:var(--bad);font-size:13px}
+.sheet footer{display:flex;gap:8px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--line)}
+
+.toast{position:fixed;left:50%;bottom:24px;translate:-50% 0;display:flex;align-items:center;gap:14px;padding:10px 12px 10px 16px;border-radius:10px;background:#1b1d29;color:#fff;box-shadow:0 12px 30px -12px #1b1d2999;z-index:30}
+.toast[hidden]{display:none}
+.toast button{height:28px;padding:0 10px;border:0;border-radius:6px;background:#ffffff1f;color:#fff;font-weight:600;cursor:pointer}
+.toast button:hover{background:#ffffff33}
+
+.dlg{position:fixed;inset:0;display:grid;place-items:center;background:#1b1d2966;z-index:40}
+.dlg[hidden]{display:none}
+.dlg > div{width:min(380px,calc(100% - 32px));padding:20px;border-radius:12px;background:var(--card);box-shadow:0 20px 50px -20px #1b1d29aa}
+.dlg h2{margin:0 0 6px;font-size:17px}
+.dlg p{margin:0 0 18px;color:var(--muted)}
+.dlg footer{display:flex;justify-content:flex-end;gap:8px}
+
+/* v1, the version v2 replaced: filled status pills, a status drop-down, numeric dates, a confirm on every approve */
+.v1 .seg{display:none}
+.v1 .sel{display:flex;align-items:center;gap:8px;color:var(--muted)}
+.v1 .st{padding:2px 10px;border-radius:99px;color:#fff;font-size:12.5px;font-weight:600}
+.v1 .st i{display:none}
+.v1 .st--warn{background:var(--warn-dot)} .v1 .st--bad{background:var(--bad-dot)} .v1 .st--ok{background:var(--ok-dot)} .v1 .st--done{background:#9a9cab}
+
+/* Explain is open and pushes the page: this page's own fixed layers make room for its panel */
+html.xp-open.xp-push .sheet{right:var(--xp-w)}
+html.xp-open.xp-push .dlg{right:var(--xp-w)}
+html.xp-open.xp-push .toast{left:calc(50% - var(--xp-w) / 2)}
+@media (max-width:760px){
+  .row{grid-template-columns:32px minmax(0,1fr) 88px;row-gap:2px}
+  .row .av,.row time,.row.th{display:none}
+  .row .st{grid-column:2}
+  .sheet{width:100%}
+  html.xp-open.xp-push .sheet,html.xp-open.xp-push .dlg{right:0}
+  html.xp-open.xp-push .toast{left:50%}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">Acme <span>Expenses</span></div>
+  <nav aria-label="Expenses">
+    <a href="#claims">My claims</a>
+    <a href="#approvals" class="is-on" aria-current="page">Approvals <b id="navCount">5</b></a>
+    <a href="#reports">Reports</a>
+  </nav>
+  <span class="me" title="Jo Dunn (you)">JD</span>
+</header>
+
+<main>
+  <div class="head">
+    <div><h1>Approvals</h1><p class="sum" id="sum"></p></div>
+    <button class="btn primary" id="bulk" disabled>Approve selected</button>
+  </div>
+
+  <div class="bar">
+    <label class="search"><span class="sr">Search claims</span>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="7" cy="7" r="4.8"/><path d="m10.6 10.6 3.4 3.4"/></svg>
+      <input id="q" type="search" placeholder="e.g. Priya, hotel" autocomplete="off"></label>
+    <div class="seg" role="radiogroup" aria-label="Status" id="seg"></div>
+    <label class="sel">Status <select id="selStatus"></select></label>
+    <label class="sort">Sort <select id="sort">
+      <option value="old">Oldest first</option><option value="new">Newest first</option><option value="amt">Highest amount</option></select></label>
+  </div>
+
+  <div class="list" role="table" aria-label="Claims">
+    <div class="row th" role="row"><span role="columnheader"><span class="sr">Select</span></span><span></span><span role="columnheader">Claim</span><span role="columnheader">Date</span><span role="columnheader" style="text-align:right">Amount</span><span role="columnheader">Check</span></div>
+    <div id="rows" role="rowgroup"></div>
+    <div class="empty" id="empty" hidden>
+      <h2>Nothing waiting for you</h2>
+      <p>New claims from your team land here, and you get an email when one arrives.</p>
+      <button class="btn" data-filter="approved">See what you approved</button>
+    </div>
+  </div>
+</main>
+
+<aside class="sheet" id="sheet" aria-labelledby="shName" hidden>
+  <header><span class="av" id="shAv"></span><div><b id="shName"></b><span id="shTeam"></span></div>
+    <button class="x" id="shClose" aria-label="Close the claim">✕</button></header>
+  <div class="in">
+    <div class="big" id="shAmt"></div>
+    <p class="what" id="shWhat"></p>
+    <div class="receipt" id="shReceipt"></div>
+    <ul class="checks" id="shChecks"></ul>
+    <div class="note"><label for="shNote" id="shNoteL"></label>
+      <textarea id="shNote" aria-describedby="shErr"></textarea>
+      <p class="err" id="shErr" hidden></p></div>
+  </div>
+  <footer><button class="btn" id="shBack">Send back</button><button class="btn primary" id="shApprove"></button></footer>
+</aside>
+
+<div class="toast" id="toast" role="status" hidden><span id="toastMsg"></span><button id="undo">Undo</button></div>
+
+<div class="dlg" id="dlg" hidden><div role="dialog" aria-modal="true" aria-labelledby="dlgT">
+  <h2 id="dlgT">Approve this claim?</h2><p id="dlgP"></p>
+  <footer><button class="btn" id="dlgNo">Cancel</button><button class="btn primary" id="dlgYes">Approve</button></footer></div></div>
+
+<script>
+/* ── the demo app: fictional data, everything clickable ── */
+const TODAY = '2026-09-29';
+const SEED = [
+  { id:'c1', who:'Priya Nair', team:'Sales', what:'Client dinner · Leeds', date:'2026-09-12', amt:186.40, check:'warn', receipt:true,
+    checks:[['bad', 'Over the £150 meals limit by £36.40'], ['ok', 'Receipt attached'], ['ok', 'Client named: Harlow Foods']] },
+  { id:'c2', who:'Tom Okafor', team:'Field ops', what:'Train to Bristol, return', date:'2026-09-19', amt:64.20, check:'ok', receipt:true,
+    checks:[['ok', 'Within the travel policy'], ['ok', 'Receipt attached']] },
+  { id:'c3', who:'Mei Lin', team:'Field ops', what:'Hotel, 2 nights · Glasgow', date:'2026-09-22', amt:312.00, check:'bad', receipt:false,
+    checks:[['bad', 'No receipt — hotels need one'], ['ok', 'Within £160 a night']] },
+  { id:'c4', who:'Ana Costa', team:'Design', what:'Workshop materials', date:'2026-09-24', amt:94.50, check:'ok', receipt:true,
+    checks:[['ok', 'Within the materials budget'], ['ok', 'Receipt attached']] },
+  { id:'c5', who:'Sam Rivera', team:'Sales', what:'Taxi to the airport', date:'2026-09-29T08:42', amt:38.90, check:'ok', receipt:true,
+    checks:[['ok', 'Within the travel policy'], ['ok', 'Receipt attached']] }
+];
+const LABEL = { warn:'Over policy', bad:'Receipt missing', ok:'Ready', approved:'Approved', back:'Sent back' };
+const FILTERS = [['waiting', 'Waiting'], ['approved', 'Approved'], ['back', 'Sent back'], ['all', 'All']];
+const HIST = { approved:12, back:1 };                         // earlier decisions this month, so the counts look lived-in
+const S = { claims:[], f:'waiting', q:'', sort:'old', sel:new Set(), open:null, last:null, tmo:0 };
+const $ = s => document.querySelector(s);
+const money = n => '£' + n.toFixed(2);
+const first = c => c.who.split(' ')[0];
+const initials = c => c.who.split(' ').map(w => w[0]).join('');
+const v1 = () => document.body.classList.contains('v1');
+function when(d){                                             // v2: "12 Sep", or the time if today · v1: 12/09/2026
+  const [day, time] = d.split('T'), dt = new Date(day + 'T12:00');
+  if (v1()) return dt.toLocaleDateString('en-GB');
+  return day === TODAY ? (time || '09:00') : `${dt.getDate()} ${'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ')[dt.getMonth()]}`;
+}
+const status = c => c.state || c.check;
+const waiting = c => !c.state;
+const counts = () => ({ waiting: S.claims.filter(waiting).length, approved: HIST.approved + S.claims.filter(c => c.state === 'approved').length,
+  back: HIST.back + S.claims.filter(c => c.state === 'back').length, all: S.claims.length + HIST.approved + HIST.back });
+
+function shown(){
+  let l = S.claims.filter(c => S.f === 'all' || (S.f === 'waiting' ? waiting(c) : c.state === S.f));
+  if (S.q){ const q = S.q.toLowerCase(); l = l.filter(c => (c.who + ' ' + c.what).toLowerCase().includes(q)); }
+  const by = { old:(a, b) => a.date.localeCompare(b.date), new:(a, b) => b.date.localeCompare(a.date), amt:(a, b) => b.amt - a.amt }[S.sort];
+  return l.sort(by);
+}
+function render(){
+  const n = counts(), w = S.claims.filter(waiting);
+  $('#sum').innerHTML = w.length ? `<b>${w.length} waiting for you</b> · ${money(w.reduce((a, c) => a + c.amt, 0))}` : 'Nothing waiting';
+  $('#navCount').textContent = w.length; $('#navCount').hidden = !w.length;
+  $('#seg').innerHTML = FILTERS.map(([k, l]) => `<button role="radio" aria-checked="${S.f === k}" data-filter="${k}">${l}<span>${n[k]}</span></button>`).join('');
+  $('#selStatus').innerHTML = FILTERS.map(([k, l]) => `<option value="${k}"${S.f === k ? ' selected' : ''}>${l} (${n[k]})</option>`).join('');
+  const l = shown();
+  $('#rows').innerHTML = l.map(c => `<div class="row${S.open === c.id ? ' is-open' : ''}" role="row" data-id="${c.id}">
+      <label class="ck" role="cell"><input type="checkbox" ${S.sel.has(c.id) ? 'checked' : ''} ${waiting(c) ? '' : 'disabled'} aria-label="Select ${c.who}’s claim"></label>
+      <span class="av" aria-hidden="true">${initials(c)}</span>
+      <div class="who" role="cell"><b>${c.who}</b><span>${c.what}</span></div>
+      <time role="cell" datetime="${c.date}" title="${new Date(c.date.split('T')[0] + 'T12:00').toDateString()}">${when(c.date)}</time>
+      <span class="amt" role="cell">${money(c.amt)}</span>
+      <span role="cell"><span class="st st--${c.state ? 'done' : c.check}"><i></i>${LABEL[status(c)]}</span></span></div>`).join('');
+  $('#empty').hidden = !!l.length || S.f !== 'waiting';
+  const k = S.sel.size; $('#bulk').disabled = !k; $('#bulk').textContent = k ? `Approve ${k} selected` : 'Approve selected';
+}
+function openClaim(id){
+  const c = S.claims.find(c => c.id === id); if (!c) return;
+  S.open = id; render();
+  $('#shAv').textContent = initials(c); $('#shName').textContent = c.who; $('#shTeam').textContent = c.team + ' · ' + when(c.date);
+  $('#shAmt').textContent = money(c.amt); $('#shWhat').textContent = c.what;
+  $('#shReceipt').className = 'receipt' + (c.receipt ? '' : ' is-none'); $('#shReceipt').textContent = c.receipt ? 'Receipt · photo, 1 page' : 'No receipt attached';
+  $('#shChecks').innerHTML = c.checks.map(([k, t]) => `<li class="${k}">${t}</li>`).join('');
+  $('#shNoteL').textContent = `Note to ${first(c)} (needed to send back)`;
+  $('#shNote').value = ''; $('#shNote').removeAttribute('aria-invalid'); $('#shErr').hidden = true;
+  $('#shApprove').textContent = 'Approve ' + money(c.amt);
+  const done = !waiting(c); $('#shApprove').disabled = $('#shBack').disabled = done;
+  $('#sheet').hidden = false;
+}
+function closeClaim(){ S.open = null; $('#sheet').hidden = true; render(); }
+function decide(ids, state){
+  S.last = ids.map(id => { const c = S.claims.find(c => c.id === id); return [c, c.state]; });
+  ids.forEach(id => { S.claims.find(c => c.id === id).state = state; S.sel.delete(id); });
+  closeClaim();
+  const c = S.claims.find(c => c.id === ids[0]);
+  $('#toastMsg').textContent = ids.length > 1 ? `Approved ${ids.length} claims` : state === 'approved' ? `Approved ${first(c)}’s claim` : `Sent back to ${first(c)}`;
+  $('#toast').hidden = false; clearTimeout(S.tmo); S.tmo = setTimeout(() => { $('#toast').hidden = true; }, 8000);
+}
+function approve(id){
+  if (!v1()) return decide([id], 'approved');
+  const c = S.claims.find(c => c.id === id);                 // v1 asked every time
+  $('#dlgP').textContent = `${money(c.amt)} to ${c.who} for ${c.what.toLowerCase()}.`; $('#dlg').hidden = false; $('#dlgYes').dataset.id = id; $('#dlgYes').focus();
+}
+function sendBack(){
+  const t = $('#shNote');
+  if (!t.value.trim()){ const c = S.claims.find(c => c.id === S.open);
+    $('#shErr').textContent = `Say what ${first(c)} needs to change — for example, “Add the receipt”.`; $('#shErr').hidden = false; t.setAttribute('aria-invalid', 'true'); t.focus(); return false; }
+  decide([S.open], 'back'); return true;
+}
+
+document.addEventListener('click', e => {
+  const f = e.target.closest('[data-filter]'); if (f){ S.f = f.dataset.filter; S.sel.clear(); return render(); }
+  if (e.target.closest('.ck')) return;
+  const r = e.target.closest('.row[data-id]'); if (r) return S.open === r.dataset.id ? closeClaim() : openClaim(r.dataset.id);
+});
+document.addEventListener('change', e => {
+  const ck = e.target.closest('.ck input'); if (ck){ const id = ck.closest('.row').dataset.id; ck.checked ? S.sel.add(id) : S.sel.delete(id); return render(); }
+  if (e.target.id === 'selStatus'){ S.f = e.target.value; S.sel.clear(); render(); }
+  if (e.target.id === 'sort'){ S.sort = e.target.value; render(); }
+});
+$('#q').addEventListener('input', e => { S.q = e.target.value.trim(); render(); });
+$('#bulk').addEventListener('click', () => decide([...S.sel], 'approved'));   // approves whatever is ticked — see Found in review
+$('#shClose').addEventListener('click', closeClaim);
+$('#shApprove').addEventListener('click', () => approve(S.open));
+$('#shBack').addEventListener('click', sendBack);
+$('#undo').addEventListener('click', () => { (S.last || []).forEach(([c, st]) => { c.state = st; }); S.last = null; $('#toast').hidden = true; render(); });
+$('#dlgNo').addEventListener('click', () => { $('#dlg').hidden = true; });
+$('#dlgYes').addEventListener('click', e => { $('#dlg').hidden = true; decide([e.target.dataset.id], 'approved'); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#dlg').hidden) $('#dlg').hidden = true; else if (e.key === 'Escape' && S.open && !document.documentElement.classList.contains('xp-open')) closeClaim(); });
+
+/* what Explain's setups use to put the screen in a state */
+window.DEMO = {
+  reset(){ S.claims = SEED.map(c => ({ ...c })); Object.assign(S, { f:'waiting', q:'', sort:'old', open:null, last:null }); S.sel.clear();
+    $('#q').value = ''; $('#sort').value = 'old'; $('#sheet').hidden = true; $('#toast').hidden = true; $('#dlg').hidden = true; clearTimeout(S.tmo); render(); scrollTo(0, 0); },
+  open: openClaim, approve, sendBack, decide, select(ids){ ids.forEach(id => S.sel.add(id)); render(); },
+  version(v){ document.body.classList.toggle('v1', v === 'v1'); DEMO.reset(); }
+};
+DEMO.version(/[?&]v1\b/.test(location.search) ? 'v1' : 'v2');
+
+/* Explain: which version is on screen, and how Compare switches */
+window.EXPLAIN_CONFIG = {
+  key: () => v1() ? 'approvals-v1' : 'approvals',
+  show: id => DEMO.version(id === 'approvals-v1' ? 'v1' : 'v2')
+};
+/* the guide page (guide.html) drives this demo from outside: { xp:'open', id:'topic id', n, v:'v1'|'v2' } · { xp:'close' } */
+addEventListener('message', async ({ data: m }) => {
+  if (!m || !m.xp || !window.__xp) return;
+  if (m.xp === 'close') return __xp.close();
+  if (m.v && (m.v === 'v1') !== v1()){ __xp.close(); DEMO.version(m.v); }
+  if (m.lens) __xp.lens(m.lens);
+  await __xp.open(0);
+  const i = m.id ? __xp.topics().findIndex(t => t.id === m.id) : 0;
+  if (i > 0) await __xp.open(i);
+  if (m.n) __xp.focus(m.n - 1);
+  if (m.inspect){ __xp.inspect(true); __xp.pin(m.inspect); }        // the guide's "Inspect a part"
+  if (m.audit){ const b = document.querySelector('#xp [data-xp="audit"]'); if (b) b.click(); }
+  if (m.sc != null){ const b = document.querySelector(`#xp [data-xp="sc"][data-i="${m.sc}"]`); if (b) b.click(); }   // Judged: pick the scenario
+});
+</script>
+<script src="demo.xp.js"></script>
+<script src="../explain.js"></script>
+</body>
+</html>
